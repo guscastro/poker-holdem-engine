@@ -66,8 +66,6 @@ connect(config.mongoUri)
       });
     }
 
-
-
     engine.on('tournament:aborted', function() {
       console.log(chalk.bold.red('Tournament aborted.'));
     });
@@ -84,23 +82,8 @@ connect(config.mongoUri)
     });
 
 
-
-
-
     const tournamentID = config.tournamentId;
     const players = config.players;
-
-    players.forEach(function(player) {
-      const port = player.serviceUrl.match(/:([\d]{4})\/$/)[1];
-      const childWorkingDirectory = path.resolve(process.cwd(), 'demo-players', player.name);
-      const child = exec('node ./index.js', { cwd: childWorkingDirectory, env: { PORT: port } }, function(err, stdout, stderr) {
-        if (err) {
-          console.log(chalk.bold.red('An error occurred while trying to open child process'), err);
-        }
-      });
-      child.stdout.on('data', data => console.log(chalk.bold.gray(`${player.name}'s stdout:`), data));
-      child.stderr.on('data', data => console.log(chalk.bold.red(`${player.name}'s stderr:`), data));
-    });
 
     console.log(chalk.bold.green('Ready to start a local tournament.'))
     engine.start(tournamentID, players);

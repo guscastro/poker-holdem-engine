@@ -5,18 +5,18 @@ exports = module.exports = {
   players: [{
     id: 'arale-id',
     name: 'arale',
-    serviceUrl: 'http://127.0.0.1:8080/'
+    bet: require('../demo-players/arale/player').bet
   }, {
     id: 'bender-id',
     name: 'bender',
-    serviceUrl: 'http://127.0.0.1:8081/'
+    bet: require('../demo-players/bender/player').bet
   }, {
     id: 'marvin-id',
     name: 'marvin',
-    serviceUrl: 'http://127.0.0.1:8082/'
+    bet: require('../demo-players/marvin/player').bet
   }, {
     id: 'r2d2-id',
     name: 'r2d2',
-    serviceUrl: 'http://127.0.0.1:8083/'
+    bet: require('../demo-players/r2d2/player').bet
   }]
 };

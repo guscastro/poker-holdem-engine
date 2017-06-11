@@ -32,11 +32,12 @@ tape('cant create invalid player', function(t) {
 
 tape('create new player', function(t) {
 
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const bet = () => {}
+  const player = sut({ name: 'arale', id: 'a1', bet });
 
   t.strictEqual(player.id, 'a1');
   t.strictEqual(player.name, 'arale');
-  t.strictEqual(player.serviceUrl, 'http:arale.com');
+  t.strictEqual(player.bet, bet);
 
   t.strictEqual(player.status, 'active', 'player is active');
   t.strictEqual(player.chips, config.BUYIN, 'player has chips');
@@ -58,11 +59,11 @@ tape('player update gamestate (internal)', t => t.end());
 
 tape('internal gamestate update', function(t) {
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
-  const bender = sut({ name: 'bender', id: 'b2', serviceUrl: 'http:bender.com' });
+  const bender = sut({ name: 'bender', id: 'b2', bet: () => {} });
 
-  const marvin = sut({ name: 'marvin', id: 'm3', serviceUrl: 'http:marvin.com' });
+  const marvin = sut({ name: 'marvin', id: 'm3', bet: () => {} });
   marvin.chips = 50;
 
   const gamestate = { pot: 150, sidepots: [], callAmount: 100, players: [arale, bender, marvin] };
@@ -116,7 +117,7 @@ tape('player#pay', t => t.end());
 tape('player pay call internal bet method', function(t) {
 
   const gamestate = {};
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const player = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
   const updateStub = sinon.stub(player, getSymbol(Object.getPrototypeOf(player), 'internal-update-method'));
 
@@ -136,7 +137,7 @@ tape('player pay call internal bet method', function(t) {
 tape('player never pay more than he owns', function(t) {
 
   const gamestate = {};
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const player = sut({ name: 'arale', id: 'a1', bet: () => {} });
   player.chips = 40;
 
   const updateStub = sinon.stub(player, getSymbol(Object.getPrototypeOf(player), 'internal-update-method'));
@@ -162,7 +163,7 @@ tape('player#fold', t => t.end());
 tape('update player status to "folded"', function(t) {
 
   const gamestate = {};
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const player = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
   engine.once('gamestate:updated', function(data, done){
     t.equal(player.status, 'folded');
@@ -187,7 +188,7 @@ tape('bet amount is less than player call amount', function(t) {
   t.comment('unless he is betting all his chips, the bet is treated as a fold.');
 
   const gamestate = { callAmount: 100 };
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const player = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
   player.chips = 1000;
 
@@ -205,7 +206,7 @@ tape('bet amount is less than player call amount', function(t) {
   t.comment('but since is an allin bet, the player does not fold.');
 
   const gamestate = { callAmount: 100 };
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const player = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
   player.chips = 50;
 
@@ -225,7 +226,7 @@ tape('bet amount is less than player call amount', function(t) {
 tape('bet amount is a call', function(t) {
 
   const gamestate = { callAmount: 100, lastRaiseAmount: 200 };
-  const player = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const player = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
   player.chips = 1000;
   player.chipsBet = 50;
@@ -247,12 +248,12 @@ tape('a player cant raise an amount he has already called', function(t) {
 
   t.comment('the attempt to raise is treated as a simple call.');
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
   arale[hasTalked_] = true;
   arale.chips = 1000;
   arale.chipsBet = 80;
 
-  const bender = sut({ name: 'bender', id: 'b2', serviceUrl: 'http:bender.com' });
+  const bender = sut({ name: 'bender', id: 'b2', bet: () => {} });
   bender[hasTalked_] = true;
 
   const gamestate = { callAmount: 100, players: [arale, bender] };
@@ -275,7 +276,7 @@ tape('bet amount is a raise, but less than min raise amount', function(t) {
 
   const gamestate = { callAmount: 100, lastRaiseAmount: 20 };
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
   arale.chips = 1000;
   arale.chipsBet = 20;
 
@@ -295,11 +296,11 @@ tape('bet amount is a raise, but less than min raise amount and the player is al
 
   t.comment('an allin bet that is not greater than the minimum raise amount doesnt reopen the pot.');
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
   arale.chips = 90;
   arale.chipsBet = 20;
 
-  const bender = sut({ name: 'bender', id: 'b2', serviceUrl: 'http:bender.com' });
+  const bender = sut({ name: 'bender', id: 'b2', bet: () => {} });
   bender[hasTalked_] = true;
 
   const updateStub = sinon.stub(arale, getSymbol(Object.getPrototypeOf(arale), 'internal-update-method'));
@@ -324,11 +325,11 @@ tape('bet amount is a proper raise', function(t) {
   // lastRaiseAmount: is the amount of the raise;
   // it's computed by applying the formula: playerChipsBet + betAmount - callAmount
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
   arale.chips = 1000;
   arale.chipsBet = 20;
 
-  const bender = sut({ name: 'bender', id: 'b2', serviceUrl: 'http:bender.com' });
+  const bender = sut({ name: 'bender', id: 'b2', bet: () => {} });
   bender[hasTalked_] = true;
 
   const gamestate = { callAmount: 100, lastRaiseAmount: 20, players: [arale, bender] };
@@ -350,11 +351,11 @@ tape('bet amount is a proper raise, but too high', function(t) {
 
   // the bet amount is always normalized to maximum amount owned by the player
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
   arale.chips = 1000;
   arale.chipsBet = 50;
 
-  const bender = sut({ name: 'bender', id: 'b2', serviceUrl: 'http:bender.com' });
+  const bender = sut({ name: 'bender', id: 'b2', bet: () => {} });
   bender[hasTalked_] = true;
 
   const gamestate = { callAmount: 100, lastRaiseAmount: 20, players: [arale, bender] };
@@ -379,8 +380,6 @@ tape('player#talk', t => t.end());
 
 tape('check json', function(t) {
 
-  const postStub = sinon.stub(request, 'post');
-
   const gamestate = {
     tournamentId: 'test-tournament',
     gameProgressiveId: 1,
@@ -395,8 +394,10 @@ tape('check json', function(t) {
     players: []
   };
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
-  const bender = sut({ name: 'bender', id: 'b2', serviceUrl: 'http:bender.com' });
+  const aralebetStub = sinon.spy();
+  const arale = sut({ name: 'arale', id: 'a1', bet: aralebetStub });
+  const benderbetStub = sinon.spy();
+  const bender = sut({ name: 'bender', id: 'b2', bet: benderbetStub });
 
 
   arale.cards = [{rank:'A', type:'H'}, {rank:'A', type:'S'}];
@@ -410,10 +411,10 @@ tape('check json', function(t) {
 
   arale.talk(gamestate);
 
-  t.ok(postStub.calledOnce, 'called arale service');
+  t.ok(aralebetStub.calledOnce, 'called arale service');
 
 
-  const infoKnownByArale = postStub.getCall(0).args[1].body;
+  const infoKnownByArale = aralebetStub.getCall(0).args[0];
 
   t.equal(infoKnownByArale.tournamentId, 'test-tournament', 'check tournament');
   t.equal(infoKnownByArale.game, 1, 'check game');
@@ -441,12 +442,12 @@ tape('check json', function(t) {
       .forEach(prop => t.ok(player.hasOwnProperty(prop), 'check player visible property'));
   });
 
-  postStub.reset();
+  aralebetStub.reset();
 
   bender.talk(gamestate);
-  t.ok(postStub.calledOnce, 'called bender service');
+  t.ok(benderbetStub.calledOnce, 'called bender service');
 
-  const infoKnownByBender = postStub.getCall(0).args[1].body;
+  const infoKnownByBender = benderbetStub.getCall(0).args[0];
 
   t.equal(infoKnownByBender.tournamentId, 'test-tournament', 'check tournament');
   t.equal(infoKnownByBender.game, 1, 'check game');
@@ -473,24 +474,21 @@ tape('check json', function(t) {
       .forEach(prop => t.ok(player.hasOwnProperty(prop), 'check player visible property'));
   });
 
-  postStub.restore();
-
   t.end();
 
 });
 
 tape('when server request fail, default bet is 0', function(t) {
 
-  const postStub = sinon.stub(request, 'post');
+  const betStub = sinon.stub();
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: betStub });
 
-  postStub.yields({ message: 'Internal Server Error' });
+  betStub.throws();
   arale.talk({ players: [] })
     .then(function(betAmount){
       t.equal(betAmount, 0);
 
-      postStub.restore();
       t.end();
     });
 
@@ -498,15 +496,14 @@ tape('when server request fail, default bet is 0', function(t) {
 
 tape('before the promise is resolved, the amount is sanitized (negative number)', function(t) {
 
-  const postStub = sinon.stub(request, 'post');
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const betStub = sinon.stub();
+  const arale = sut({ name: 'arale', id: 'a1', bet: betStub });
 
-  postStub.yields(null, {}, '-50');
+  betStub.returns('-50');
   arale.talk({ players: [] })
     .then(function(betAmount){
       t.equal(betAmount, 0);
 
-      postStub.restore();
       t.end();
     });
 
@@ -514,15 +511,14 @@ tape('before the promise is resolved, the amount is sanitized (negative number)'
 
 tape('before the promise is resolved, the amount is sanitized (NaN)', function(t) {
 
-  const postStub = sinon.stub(request, 'post');
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const betStub = sinon.stub();
+  const arale = sut({ name: 'arale', id: 'a1', bet: betStub });
 
-  postStub.yields(null, {}, 'hello');
+  betStub.returns('hello');
   arale.talk({ players: [] })
     .then(function(betAmount){
       t.equal(betAmount, 0);
 
-      postStub.restore();
       t.end();
     });
 
@@ -530,15 +526,14 @@ tape('before the promise is resolved, the amount is sanitized (NaN)', function(t
 
 tape('before the promise is resolved, the amount is sanitized (Infinity is treated as NaN)', function(t) {
 
-  const postStub = sinon.stub(request, 'post');
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const betStub = sinon.stub();
+  const arale = sut({ name: 'arale', id: 'a1', bet: betStub });
 
-  postStub.yields(null, {}, 'Infinity');
+  betStub.returns('Infinity');
   arale.talk({ players: [] })
     .then(function(betAmount){
       t.equal(betAmount, 0);
 
-      postStub.restore();
       t.end();
     });
 
@@ -546,15 +541,14 @@ tape('before the promise is resolved, the amount is sanitized (Infinity is treat
 
 tape('before the promise is resolved, the amount is sanitized (valid amount)', function(t) {
 
-  const postStub = sinon.stub(request, 'post');
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const betStub = sinon.stub();
+  const arale = sut({ name: 'arale', id: 'a1', bet: betStub });
 
-  postStub.yields(null, {}, '100');
+  betStub.returns('100');
   arale.talk({ players: [] })
     .then(function(betAmount){
       t.equal(betAmount, 100);
 
-      postStub.restore();
       t.end();
     });
 
@@ -567,7 +561,7 @@ tape('player#showdown', t => t.end());
 
 tape('return data about the strongest combination', function(t) {
 
-  const arale = sut({ name: 'arale', id: 'a1', serviceUrl: 'http:arale.com' });
+  const arale = sut({ name: 'arale', id: 'a1', bet: () => {} });
 
   arale.cards = [
     { rank: 'A', type: 'S' },

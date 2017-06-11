@@ -10,10 +10,10 @@ const sut = require('../../../poker-engine/domain-utils/showdown');
 
 
 const players = [
-  { name: 'arale', id: 'a1', serviceUrl: 'http://arale.com/' },
-  { name: 'bender', id: 'b2', serviceUrl: 'http://bender.com/' },
-  { name: 'marvin', id: 'm3', serviceUrl: 'http://marvin.com/' },
-  { name: 'wall-e', id: 'w4', serviceUrl: 'http://walle.com/' }
+  { name: 'arale', id: 'a1', bet: () => {} },
+  { name: 'bender', id: 'b2', bet: () => {} },
+  { name: 'marvin', id: 'm3', bet: () => {} },
+  { name: 'wall-e', id: 'w4', bet: () => {} }
 ];
 
 tape('showdown', t => t.end());

@@ -62,7 +62,7 @@ tape('controller has the methods needed to control the game flow', function(t){
 tape('setup: should notify "tournament:aborted" in case not enough players', function(t){
 
   const players = [
-    { name: 'arale', id: 'a1', serviceUrl: 'http://x1-heroku-app.com/' }
+    { name: 'arale', id: 'a1', bet: () => {} }
   ];
 
   const setup_ = getSymbol(sut, 'setup-tournament-method');
@@ -79,10 +79,10 @@ tape('setup: should notify "tournament:aborted" in case not enough players', fun
 tape('setup: should initialize the gamestate, and start the game loop', function(t){
 
   const players = [
-    { name: 'arale', id: 'a1', serviceUrl: 'http://x1-heroku-app.com/' },
-    { name: 'bender', id: 'b2', serviceUrl: 'http://y2-heroku-app.com/' },
-    { name: 'marvin', id: 'c3', serviceUrl: 'http://z3-heroku-app.com/' },
-    { id: 'w4', serviceUrl: 'http://ww-heroku-app.com/' }
+    { name: 'arale', id: 'a1', bet: () => {} },
+    { name: 'bender', id: 'b2', bet: () => {} },
+    { name: 'marvin', id: 'c3', bet: () => {} },
+    { id: 'w4', bet: () => {} }
   ];
 
   const setup_ = getSymbol(sut, 'setup-tournament-method');

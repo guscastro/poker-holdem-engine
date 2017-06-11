@@ -27,7 +27,7 @@ const gamestate = Object.create(EventEmitter.prototype, {
    *  each player is an object with at least the following properties:
    *  - player.id
    *  - player.name
-   *  - player.serviceUrl
+   *  - player.bet
    * @param {Number} gameId:
    *  specify from which game the tournament should start;
    *  it's different from 1 when the tournament is recovered after a crash.
@@ -107,7 +107,7 @@ const gamestate = Object.create(EventEmitter.prototype, {
    *  each player is an object with at least the following properties:
    *  - player.id
    *  - player.name
-   *  - player.serviceUrl
+   *  - player.bet
    * @param {Number} gameId:
    *  specify from which game the tournament should start;
    *  it's different from 1 when the tournament is recovered after a crash.

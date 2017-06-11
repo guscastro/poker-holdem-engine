@@ -257,20 +257,13 @@ const actions = {
     // index of the player 'this' in the players array
     state.me = gs.players.findIndex(player => player.id == this.id);
 
-
-    const requestSettings = { body: state, json: true, followAllRedirects: true, maxRedirects: 1, timeout: 5000 };
-
-    return new Promise((resolve, reject) => {
-      request.post(`${this.serviceUrl}bet`, requestSettings, (err, response, playerBetAmount) => {
-        if (err){
-          logger.warn('Bet request to %s failed, cause %s', this.serviceUrl, err.message, { tag: gs.handUniqueId });
-          return void resolve(0);
-        }
-        logger.log('silly', '%s (%s) has bet %s (raw)', this.name, this.id, playerBetAmount, { tag: gs.handUniqueId });
-        resolve(sanitizeAmount(playerBetAmount));
-      });
-    });
-
+    try {
+      const betAmount = this.bet(state)
+      return Promise.resolve(sanitizeAmount(betAmount))
+    } catch (err) {
+      logger.warn('Bet request to %s failed, cause %s', this.name, err.message, { tag: gs.handUniqueId });
+      return Promise.resolve(0)
+    }
   },
 
 
@@ -309,7 +302,7 @@ const actions = {
  * @returns {Boolean} true when the input parameter is a valid "player" object; false otherwise
  */
 function isValidPlayer(player){
-  return player.id && player.name && player.serviceUrl;
+  return player.id && player.name && player.bet;
 }
 
 /**
@@ -360,7 +353,7 @@ function getBestCombinationCardsLogMessage(cards){
  * @param {Object} obj
  *  - player.id
  *  - player.name
- *  - player.serviceUrl
+ *  - player.bet
  *
  * @returns {object|null} the player object created
  */
@@ -373,7 +366,7 @@ exports = module.exports = function factory(obj){
 
   const player = Object.create(actions);
 
-  ['id', 'name', 'serviceUrl']
+  ['id', 'name', 'bet']
     .forEach(prop => Object.defineProperty(player, prop, { value: obj[prop] }))
 
   // status of the player

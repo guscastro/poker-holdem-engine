@@ -45,7 +45,7 @@ gamestate
 
   It's an Array of object each one containing the data relative to a player.
 
-  Each player has the following properties: `id`, `name`, `serviceUrl`, `version`, `status`, `chips`, `chipsBet`, and `cards`.
+  Each player has the following properties: `id`, `name`, `bet`, `version`, `status`, `chips`, `chipsBet`, and `cards`.
 
   + `id`
     A unique id of the player
@@ -53,8 +53,8 @@ gamestate
   + `name`
     The name of the player
 
-  + `serviceUrl`
-    Url of the api endpoint on which the player web service responds.
+  + `bet`
+    A function that accepts the game state and returns the desired bet amount.
 
   + `status`
     Player's status. One of `active`, `folded`, or `out`

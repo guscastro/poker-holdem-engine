@@ -14,7 +14,7 @@ const playerStatus = require('../../poker-engine/domain/player-status');
 const createPlayer = require('../../poker-engine/domain-utils/player-factory');
 
 function createPlayerByName(name){
-  return createPlayer({ name: name, id: `${name}ID`, serviceUrl: `https://${name}.com` });
+  return createPlayer({ name: name, id: `${name}ID`, bet: () => {} });
 }
 
 const sut = require('../../poker-engine/bet-loop');
